@@ -22,7 +22,6 @@ async def send_all_channels(message):
 
 async def pickbot_checker():
     await client.wait_until_ready()
-    #channel = client.get_channel(771502202907787314)
     count = 0
     while True:
         await asyncio.sleep(1)
