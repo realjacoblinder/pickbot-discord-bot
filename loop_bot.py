@@ -12,16 +12,19 @@ reddit = praw.Reddit("scraper",user_agent="scraper")
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
-CHANNEL = int(os.getenv('DISCORD_CHANNEL'))
+CHANNELS = [int(i) for i in os.getenv('ALL_CHANNELS').split(',')]
 
 client = discord.Client()
+async def send_all_channels(message):
+    for channel in CHANNELS:
+        channel = client.get_channel(channel)
+        await channel.send(message)
 
 async def my_background_task():
     await client.wait_until_ready()
-    channel = client.get_channel(CHANNEL)
-    await channel.send('Listener started...')
+    await send_all_channels('Listener started...')
     while True:
-        await channel.send("Autist detector booting up.")
+        await send_all_channels("Autist detector booting up.")
         for comment in reddit.redditor('pickbot').stream.comments(skip_existing=True, pause_after=0):
             if comment is None:
                 await asyncio.sleep(1)
@@ -50,8 +53,8 @@ async def my_background_task():
                 tmp = [k.replace('**','') for k in tmp]
                 print(tmp)
                 pretty_t.add_row(tmp)
-            await channel.send(f'```\n{pretty_t.get_string()}\n```')
-            await channel.send(sub_url)
+            await send_all_channels(f'```\n{pretty_t.get_string()}\n```')
+            await send_all_channels(sub_url)
 
 @client.event
 async def on_ready():

@@ -10,17 +10,23 @@ reddit = praw.Reddit("scraper",user_agent="scraper")
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
+CHANNELS = [int(i) for i in os.getenv('ALL_CHANNELS').split(',')]
 
 client = discord.Client()
 
+async def send_all_channels(message):
+    for channel in CHANNELS:
+        channel = client.get_channel(channel)
+        await channel.send('Testing')
+        await channel.send(message)
+
 async def pickbot_checker():
     await client.wait_until_ready()
-    channel = client.get_channel(771502202907787314)
+    #channel = client.get_channel(771502202907787314)
     count = 0
     while True:
-        await channel.send('Testing loops')
         await asyncio.sleep(1)
-        await channel.send(count)
+        await send_all_channels(str(count))
         await asyncio.sleep(2)
         count += 1
 
