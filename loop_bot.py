@@ -12,12 +12,13 @@ reddit = praw.Reddit("scraper",user_agent="scraper")
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
+CHANNEL = int(os.getenv('DISCORD_CHANNEL'))
 
 client = discord.Client()
 
 async def my_background_task():
     await client.wait_until_ready()
-    channel = client.get_channel(771502202907787314)
+    channel = client.get_channel(CHANNEL)
     await channel.send('Listener started...')
     while True:
         await channel.send("Autist detector booting up.")
@@ -60,7 +61,7 @@ async def on_ready():
 async def on_message(message):
     if message.content.startswith("autists"):
         print(message.channel.id)
-        await message.channel.send("That's us, fuckboy")
+        await message.channel.send("That's us, DINGUS")
 
 client.loop.create_task(my_background_task())
 client.run(TOKEN)
