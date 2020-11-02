@@ -22,7 +22,6 @@ async def send_all_channels(message):
 
 async def my_background_task():
     await client.wait_until_ready()
-    await send_all_channels('Listener started...')
     while True:
         await send_all_channels("Autist detector booting up.")
         for comment in reddit.redditor('pickbot').stream.comments(skip_existing=True, pause_after=0):
@@ -30,6 +29,7 @@ async def my_background_task():
                 await asyncio.sleep(1)
                 continue
             sub_url = comment.submission.url
+            post_flair = str(comment.submission.link_flair_text)
             comment = comment.body.split('\n')[2:-4]
             if not comment:
                 print("Empty List")
@@ -54,7 +54,7 @@ async def my_background_task():
                 print(tmp)
                 pretty_t.add_row(tmp)
             await send_all_channels(f'```\n{pretty_t.get_string()}\n```')
-            await send_all_channels(sub_url)
+            await send_all_channels('Flair: {} \n URL: {}'.format(post_flair,sub_url))
 
 @client.event
 async def on_ready():
@@ -62,9 +62,12 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    if message.author == client.user: return
     if message.content.startswith("autists"):
-        print(message.channel.id)
+        #print(message.channel.id)
         await message.channel.send("That's us, DINGUS")
+    elif message.content.find('liquidate') != -1:
+        await message.channel.send('DIAMOND HANDS')
 
 client.loop.create_task(my_background_task())
 client.run(TOKEN)
