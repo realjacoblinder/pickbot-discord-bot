@@ -53,8 +53,8 @@ async def my_background_task():
                 tmp = [k.replace('**','') for k in tmp]
                 print(tmp)
                 pretty_t.add_row(tmp)
-            await send_all_channels(f'```\n{pretty_t.get_string()}\n```')
-            await send_all_channels('Flair: {} \n URL: {}'.format(post_flair,sub_url))
+            await send_all_channels(f'Flair: {post_flair}\nURL: sub_url\n```\n{pretty_t.get_string()}\n```')
+            #await send_all_channels('Flair: {} \n URL: {}'.format(post_flair,sub_url))
 
 @client.event
 async def on_ready():
